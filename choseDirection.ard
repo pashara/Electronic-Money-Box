@@ -1,0 +1,68 @@
+#include <Servo.h>
+
+Servo s1,s2;// s2 - вверх или вниз
+
+int minS2 = 70;
+int maxS2 = 120;
+int coinsCount = 8;
+
+int minS1 = 150;
+int maxS1 = 40;
+
+
+int delay1 = 500;
+int givenMoney[8] = {1,2,5,10,20,50,100,200};
+
+void setup() {
+  s1.attach(8);  // Set left servo to digital pin 10
+  s2.attach(9);  // Set right servo to digital pin 9
+
+}
+
+
+int getIdMoneyByValue(int value){
+  switch(value){
+    case 1: return 1;
+    case 2: return 2;
+    case 5: return 3;
+    case 10: return 4;
+    case 20: return 5;
+    case 50: return 6;
+    case 100: return 7;
+    case 200: return 8;
+  }
+
+}
+
+
+
+void loop() {
+  Serial.begin(9600); 
+  for(int i = 0; i < (coinsCount); i++){
+    Serial.println (givenMoney[i]);
+    loopToMoney(getIdMoneyByValue(givenMoney[i]));
+    delay(1000);
+  }
+  /*do{
+  int i = random(0,7);
+  Serial.println (givenMoney[i]);
+    loopToMoney(getIdMoneyByValue(givenMoney[i]));
+    delay(1000);
+  }while(true);*/
+  // put your main code here, to run repeatedly:
+
+}
+
+void loopToMoney(int moneyId){
+  int perAngleS1 = (minS1-maxS1)/(coinsCount/2);
+  if(moneyId > 4){
+    s2.write(maxS2);
+  }else{
+    s2.write(minS2);
+  }
+
+  int CountInS1 = (moneyId-1)%(coinsCount/2)+1;
+  s1.write(maxS1 + CountInS1*perAngleS1);
+
+  
+}
